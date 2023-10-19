@@ -32,7 +32,7 @@ async def read_root():
 @app.get("/basic_info/{card_holder}")
 async def get_basic_info(card_holder: str , request: Request , authentication : str = Header(None)):
     """ Test Value for card holder : William Harris \n
-    Test Vlaue for authoriztation token : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"""
+    Test Value for authorization token : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"""
     if not authentication:
             return {"status" : 0, "message": f"Authoriztion Token Missing"}
     valid_auth = auth_check(authentication)
@@ -58,7 +58,7 @@ async def get_basic_info(card_holder: str , request: Request , authentication : 
 @app.get("/average_transaction_amount/{card_holder}")
 async def get_avg_txn_amt(card_holder: str , request: Request, authentication : str = Header(None)):
     """ Test Value for card holder : William Harris \n
-    Test Vlaue for authoriztation token : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"""
+    Test Value for authorization token : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"""
     if not authentication:
             return {"status" : 0, "message": f"Authoriztion Token Missing"}
     valid_auth = auth_check(authentication)
@@ -80,7 +80,7 @@ async def get_avg_txn_amt(card_holder: str , request: Request, authentication : 
 @app.get("/card_types/{card_holder}")
 async def get_card_types_by_card_holder(card_holder: str, request: Request , authentication : str = Header(None)):
     """ Test Value for card holder : William Harris \n
-    Test Vlaue for authoriztation token : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"""
+    Test Value for authorization token : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"""
     if not authentication:
             return {"status" : 0, "message": f"Authoriztion Token Missing"}
     valid_auth = auth_check(authentication)
@@ -103,7 +103,7 @@ async def get_card_types_by_card_holder(card_holder: str, request: Request , aut
 @app.get("/transaction_cities/{card_holder}")
 async def get_transaction_cities(card_holder: str, request: Request , authentication : str = Header(None)):
     """ Test Value for card holder : William Harris \n
-    Test Vlaue for authoriztation token : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"""
+    Test Value for authorization token : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"""
     if not authentication:
             return {"status" : 0, "message": f"Authoriztion Token Missing"}
     valid_auth = auth_check(authentication)
@@ -150,7 +150,7 @@ def month_number_to_word(month_number):
 @app.get("/purchase_months/{card_holder}")
 async def get_purchase_months(card_holder: str, request: Request , authentication : str = Header(None)):
     """ Test Value for card holder : William Harris \n
-    Test Vlaue for authoriztation token : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"""
+    Test Value for authorization token : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"""
     if not authentication:
             return {"status" : 0, "message": f"Authoriztion Token Missing"}
     valid_auth = auth_check(authentication)
@@ -177,7 +177,7 @@ async def get_purchase_months(card_holder: str, request: Request , authenticatio
 @app.get("/holistic_spend_analysis/{card_holder}")
 async def get_holistic_spend_analysis(card_holder: str, request: Request , authentication : str = Header(None)):
     """ Test Value for card holder : William Harris \n
-    Test Vlaue for authoriztation token : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"""
+    Test Value for authorization token : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"""
     if not authentication:
             return {"status" : 0, "message": f"Authoriztion Token Missing"}
     valid_auth = auth_check(authentication)
@@ -250,7 +250,7 @@ async def get_holistic_spend_analysis(card_holder: str, request: Request , authe
 @app.get("/brand_affiliations/{card_holder}")
 async def get_brand_affiliations(card_holder: str, request: Request , authentication : str = Header(None)):
     """ Test Value for card holder : William Harris \n
-    Test Vlaue for authoriztation token : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"""
+    Test Value for authorization token : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"""
     if not authentication:
             return {"status" : 0, "message": f"Authoriztion Token Missing"}
     valid_auth = auth_check(authentication)
@@ -293,7 +293,7 @@ async def get_budget_information(card_holder: str, request: Request , authentica
 @app.get("/travel_spends/{card_holder}")
 async def get_travel_spends(card_holder: str, request: Request , authentication : str = Header(None)):
     """ Test Value for card holder : William Harris \n
-    Test Vlaue for authoriztation token : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"""
+    Test Value for authorization token : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"""
     if not authentication:
             return {"status" : 0, "message": f"Authoriztion Token Missing"}
     valid_auth = auth_check(authentication)
@@ -316,7 +316,7 @@ async def get_travel_spends(card_holder: str, request: Request , authentication 
 @app.get("/travel_destinations/{card_holder}")
 async def get_travel_destinations(card_holder: str, request: Request , authentication : str = Header(None)):
     """ Test Value for card holder : William Harris \n
-    Test Vlaue for authoriztation token : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"""
+    Test Value for authorization token : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"""
     if not authentication:
             return {"status" : 0, "message": f"Authoriztion Token Missing"}
     valid_auth = auth_check(authentication)
