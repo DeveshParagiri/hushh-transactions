@@ -1,5 +1,5 @@
 import os
-from fastapi import FastAPI , Request
+from fastapi import FastAPI , Request ,  Header
 from google.cloud import bigquery
 import requests
 
@@ -30,9 +30,12 @@ async def read_root():
 #     return results
 
 @app.get("/basic_info/{card_holder}")
-async def get_basic_info(card_holder: str , request: Request):
-
-    valid_auth = auth_check(request.headers.get('Authorization'))
+async def get_basic_info(card_holder: str , request: Request , authentication : str = Header(None)):
+    """ Test Value for card holder : William Harris \n
+    Test Vlaue for authoriztation token : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"""
+    if not authentication:
+            return {"status" : 0, "message": f"Authoriztion Token Missing"}
+    valid_auth = auth_check(authentication)
     if valid_auth.get('status') != 1:
         return valid_auth
     
@@ -47,17 +50,18 @@ async def get_basic_info(card_holder: str , request: Request):
     """
     query_job = client.query(sql_query)
     results = [dict(row) for row in query_job]
-    if not request.headers.get('Authorization'):
-            return {"status" : 0, "message": f"Authoriztion Token Missing"}
-
     
     if not results:
             return {"message": f"No account information found for the specified card holder '{card_holder}'."}
     return results
 
 @app.get("/average_transaction_amount/{card_holder}")
-async def get_avg_txn_amt(card_holder: str , request: Request):
-    valid_auth = auth_check(request.headers.get('Authorization'))
+async def get_avg_txn_amt(card_holder: str , request: Request, authentication : str = Header(None)):
+    """ Test Value for card holder : William Harris \n
+    Test Vlaue for authoriztation token : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"""
+    if not authentication:
+            return {"status" : 0, "message": f"Authoriztion Token Missing"}
+    valid_auth = auth_check(authentication)
     if valid_auth.get('status') != 1:
         return valid_auth
     sql_query = f"""
@@ -74,8 +78,12 @@ async def get_avg_txn_amt(card_holder: str , request: Request):
     return {"average_transaction_amount" : average}
 
 @app.get("/card_types/{card_holder}")
-async def get_card_types_by_card_holder(card_holder: str, request: Request):
-    valid_auth = auth_check(request.headers.get('Authorization'))
+async def get_card_types_by_card_holder(card_holder: str, request: Request , authentication : str = Header(None)):
+    """ Test Value for card holder : William Harris \n
+    Test Vlaue for authoriztation token : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"""
+    if not authentication:
+            return {"status" : 0, "message": f"Authoriztion Token Missing"}
+    valid_auth = auth_check(authentication)
     if valid_auth.get('status') != 1:
         return valid_auth
     sql_query= f"""
@@ -93,8 +101,12 @@ async def get_card_types_by_card_holder(card_holder: str, request: Request):
 
         
 @app.get("/transaction_cities/{card_holder}")
-async def get_transaction_cities(card_holder: str, request: Request):
-    valid_auth = auth_check(request.headers.get('Authorization'))
+async def get_transaction_cities(card_holder: str, request: Request , authentication : str = Header(None)):
+    """ Test Value for card holder : William Harris \n
+    Test Vlaue for authoriztation token : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"""
+    if not authentication:
+            return {"status" : 0, "message": f"Authoriztion Token Missing"}
+    valid_auth = auth_check(authentication)
     if valid_auth.get('status') != 1:
         return valid_auth
     sql_query = f"""
@@ -136,8 +148,12 @@ def month_number_to_word(month_number):
     return month_names[month_number - 1] if 1 <= month_number <= 12 else "Invalid Month"
 
 @app.get("/purchase_months/{card_holder}")
-async def get_purchase_months(card_holder: str, request: Request):
-    valid_auth = auth_check(request.headers.get('Authorization'))
+async def get_purchase_months(card_holder: str, request: Request , authentication : str = Header(None)):
+    """ Test Value for card holder : William Harris \n
+    Test Vlaue for authoriztation token : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"""
+    if not authentication:
+            return {"status" : 0, "message": f"Authoriztion Token Missing"}
+    valid_auth = auth_check(authentication)
     if valid_auth.get('status') != 1:
         return valid_auth
     sql_query = f"""
@@ -159,8 +175,12 @@ async def get_purchase_months(card_holder: str, request: Request):
 
 
 @app.get("/holistic_spend_analysis/{card_holder}")
-async def get_holistic_spend_analysis(card_holder: str, request: Request):
-    valid_auth = auth_check(request.headers.get('Authorization'))
+async def get_holistic_spend_analysis(card_holder: str, request: Request , authentication : str = Header(None)):
+    """ Test Value for card holder : William Harris \n
+    Test Vlaue for authoriztation token : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"""
+    if not authentication:
+            return {"status" : 0, "message": f"Authoriztion Token Missing"}
+    valid_auth = auth_check(authentication)
     if valid_auth.get('status') != 1:
         return valid_auth
     mcc_descriptions = {
@@ -228,8 +248,12 @@ async def get_holistic_spend_analysis(card_holder: str, request: Request):
 
 
 @app.get("/brand_affiliations/{card_holder}")
-async def get_brand_affiliations(card_holder: str, request: Request):
-    valid_auth = auth_check(request.headers.get('Authorization'))
+async def get_brand_affiliations(card_holder: str, request: Request , authentication : str = Header(None)):
+    """ Test Value for card holder : William Harris \n
+    Test Vlaue for authoriztation token : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"""
+    if not authentication:
+            return {"status" : 0, "message": f"Authoriztion Token Missing"}
+    valid_auth = auth_check(authentication)
     if valid_auth.get('status') != 1:
         return valid_auth
     sql_query = f"""
@@ -246,7 +270,7 @@ async def get_brand_affiliations(card_holder: str, request: Request):
     return {"The customer has recently bought from": shopped_brands}
         
 @app.get("/budget_information/{card_holder}")
-async def get_budget_information(card_holder: str, request: Request):
+async def get_budget_information(card_holder: str, request: Request , authentication : str = Header(None)):
     sql_query = f"""
     SELECT
         MAX(amount) AS max_spend,
@@ -267,8 +291,12 @@ async def get_budget_information(card_holder: str, request: Request):
 #     return{ Access detailed statistics on spending patterns, including trends and outliers.}
 
 @app.get("/travel_spends/{card_holder}")
-async def get_travel_spends(card_holder: str, request: Request):
-    valid_auth = auth_check(request.headers.get('Authorization'))
+async def get_travel_spends(card_holder: str, request: Request , authentication : str = Header(None)):
+    """ Test Value for card holder : William Harris \n
+    Test Vlaue for authoriztation token : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"""
+    if not authentication:
+            return {"status" : 0, "message": f"Authoriztion Token Missing"}
+    valid_auth = auth_check(authentication)
     if valid_auth.get('status') != 1:
         return valid_auth
     sql_query = f"""
@@ -286,8 +314,12 @@ async def get_travel_spends(card_holder: str, request: Request):
     return {"total_travel_spend": total_travel_spend}
 
 @app.get("/travel_destinations/{card_holder}")
-async def get_travel_destinations(card_holder: str, request: Request):
-    valid_auth = auth_check(request.headers.get('Authorization'))
+async def get_travel_destinations(card_holder: str, request: Request , authentication : str = Header(None)):
+    """ Test Value for card holder : William Harris \n
+    Test Vlaue for authoriztation token : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"""
+    if not authentication:
+            return {"status" : 0, "message": f"Authoriztion Token Missing"}
+    valid_auth = auth_check(authentication)
     if valid_auth.get('status') != 1:
         return valid_auth
     sql_query = f"""
@@ -317,9 +349,9 @@ async def get_travel_destinations(card_holder: str, request: Request):
 
 
 
-# if __name__ == "__main__":
-#     import uvicorn
-#     uvicorn.run(app,host="0.0.0.0", port=8000)
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app,host="0.0.0.0", port=8000)
 
 
 # python -m uvicorn main:app --reload
