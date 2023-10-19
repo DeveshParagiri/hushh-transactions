@@ -1,13 +1,20 @@
 import os
 from fastapi import FastAPI , Request ,  Header
 from google.cloud import bigquery
+from google.oauth2.service_account import Credentials
 # import requests
+import base64
+import json 
+# os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'config.json'
 
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'config.json'
-
+creds_base64 = os.environ.get("GOOGLE_CREDENTIALS_BASE64")
+creds_json_str = base64.b64decode(creds_base64).decode('utf-8')
+creds_info = json.loads(creds_json_str)
+creds = Credentials.from_service_account_info(creds_info)
+client = bigquery.Client(credentials=creds)
 
 app= FastAPI()
-client= bigquery.Client()
+# client= bigquery.Client()
 
 @app.get("/")
 async def read_root():

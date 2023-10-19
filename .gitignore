@@ -2,5 +2,5 @@ config.json
 /env
 env/
 .env
-
+encrypted.txt
 __pycache__/
