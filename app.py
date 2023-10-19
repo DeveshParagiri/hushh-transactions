@@ -1,6 +1,7 @@
 import os
-from fastapi import FastAPI
+from fastapi import FastAPI , Request
 from google.cloud import bigquery
+import requests
 
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'config.json'
 
@@ -14,6 +15,7 @@ async def read_root():
 
 # @app.get("/get_details/{card_holder}")
 # async def get_transactions_by_card_holder(card_holder: str):
+
 #     sql_query = f"""
 #     SELECT *
 #     FROM hushone-app.lvmh_demo.transactions
@@ -28,7 +30,13 @@ async def read_root():
 #     return results
 
 @app.get("/basic_info/{card_holder}")
-async def get_basic_info(card_holder: str):
+async def get_basic_info(card_holder: str , request: Request):
+
+    valid_auth = auth_check(request.headers.get('Authorization'))
+    if valid_auth.get('status') != 1:
+        return valid_auth
+    
+
     sql_query = f"""
     SELECT
         account_id,
@@ -39,12 +47,19 @@ async def get_basic_info(card_holder: str):
     """
     query_job = client.query(sql_query)
     results = [dict(row) for row in query_job]
+    if not request.headers.get('Authorization'):
+            return {"status" : 0, "message": f"Authoriztion Token Missing"}
+
+    
     if not results:
             return {"message": f"No account information found for the specified card holder '{card_holder}'."}
     return results
 
 @app.get("/average_transaction_amount/{card_holder}")
-async def get_avg_txn_amt(card_holder: str):
+async def get_avg_txn_amt(card_holder: str , request: Request):
+    valid_auth = auth_check(request.headers.get('Authorization'))
+    if valid_auth.get('status') != 1:
+        return valid_auth
     sql_query = f"""
     SELECT amount
     FROM hushone-app.lvmh_demo.transactions
@@ -59,7 +74,10 @@ async def get_avg_txn_amt(card_holder: str):
     return {"average_transaction_amount" : average}
 
 @app.get("/card_types/{card_holder}")
-async def get_card_types_by_card_holder(card_holder: str):
+async def get_card_types_by_card_holder(card_holder: str, request: Request):
+    valid_auth = auth_check(request.headers.get('Authorization'))
+    if valid_auth.get('status') != 1:
+        return valid_auth
     sql_query= f"""
     SELECT DISTINCT card_type
     FROM hushone-app.lvmh_demo.transactions
@@ -75,7 +93,10 @@ async def get_card_types_by_card_holder(card_holder: str):
 
         
 @app.get("/transaction_cities/{card_holder}")
-async def get_transaction_cities(card_holder: str):
+async def get_transaction_cities(card_holder: str, request: Request):
+    valid_auth = auth_check(request.headers.get('Authorization'))
+    if valid_auth.get('status') != 1:
+        return valid_auth
     sql_query = f"""
     SELECT DISTINCT transaction_city
     FROM hushone-app.lvmh_demo.transactions
@@ -90,6 +111,22 @@ async def get_transaction_cities(card_holder: str):
     return {"shipping_cities": transaction_cities}
 
 
+def auth_check(token):
+    if token:
+        parts = token.split()
+        if len(parts) == 2 and parts[0].lower() == 'bearer':
+            token = parts[1]
+            # You now have the Bearer token, and you can perform any necessary authentication or authorization checks.
+            if token == "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9":
+                return {'status' : 1 , 'response':f"Bearer token: {token}"}
+            else:
+                return {'status' : 0 , 'response':f"Invalid Token"}
+        else:
+            return {'status' : 2 , 'response':f"Invalid Authorization header format"}
+    else:
+        return  {'status' : 2 , 'response':f"Token Missing"}
+
+
 def month_number_to_word(month_number):
     month_names = [
         "January", "February", "March", "April",
@@ -99,7 +136,10 @@ def month_number_to_word(month_number):
     return month_names[month_number - 1] if 1 <= month_number <= 12 else "Invalid Month"
 
 @app.get("/purchase_months/{card_holder}")
-async def get_purchase_months(card_holder: str):
+async def get_purchase_months(card_holder: str, request: Request):
+    valid_auth = auth_check(request.headers.get('Authorization'))
+    if valid_auth.get('status') != 1:
+        return valid_auth
     sql_query = f"""
     SELECT DISTINCT EXTRACT(MONTH FROM date) AS purchase_month
     FROM hushone-app.lvmh_demo.transactions
@@ -119,7 +159,10 @@ async def get_purchase_months(card_holder: str):
 
 
 @app.get("/holistic_spend_analysis/{card_holder}")
-async def get_holistic_spend_analysis(card_holder: str):
+async def get_holistic_spend_analysis(card_holder: str, request: Request):
+    valid_auth = auth_check(request.headers.get('Authorization'))
+    if valid_auth.get('status') != 1:
+        return valid_auth
     mcc_descriptions = {
     "5541": "Brand Websites",
     "5812": "Restaurants",
@@ -185,7 +228,10 @@ async def get_holistic_spend_analysis(card_holder: str):
 
 
 @app.get("/brand_affiliations/{card_holder}")
-async def get_brand_affiliations(card_holder: str):
+async def get_brand_affiliations(card_holder: str, request: Request):
+    valid_auth = auth_check(request.headers.get('Authorization'))
+    if valid_auth.get('status') != 1:
+        return valid_auth
     sql_query = f"""
     SELECT DISTINCT merchant_name
     FROM hushone-app.lvmh_demo.transactions
@@ -200,7 +246,7 @@ async def get_brand_affiliations(card_holder: str):
     return {"The customer has recently bought from": shopped_brands}
         
 @app.get("/budget_information/{card_holder}")
-async def get_budget_information(card_holder: str):
+async def get_budget_information(card_holder: str, request: Request):
     sql_query = f"""
     SELECT
         MAX(amount) AS max_spend,
@@ -221,7 +267,10 @@ async def get_budget_information(card_holder: str):
 #     return{ Access detailed statistics on spending patterns, including trends and outliers.}
 
 @app.get("/travel_spends/{card_holder}")
-async def get_travel_spends(card_holder: str):
+async def get_travel_spends(card_holder: str, request: Request):
+    valid_auth = auth_check(request.headers.get('Authorization'))
+    if valid_auth.get('status') != 1:
+        return valid_auth
     sql_query = f"""
     SELECT SUM(amount) AS total_travel_spend
     FROM hushone-app.lvmh_demo.transactions
@@ -237,7 +286,10 @@ async def get_travel_spends(card_holder: str):
     return {"total_travel_spend": total_travel_spend}
 
 @app.get("/travel_destinations/{card_holder}")
-async def get_travel_destinations(card_holder: str):
+async def get_travel_destinations(card_holder: str, request: Request):
+    valid_auth = auth_check(request.headers.get('Authorization'))
+    if valid_auth.get('status') != 1:
+        return valid_auth
     sql_query = f"""
     SELECT currency AS currency_code, SUM(amount) AS total_amount
     FROM hushone-app.lvmh_demo.transactions
