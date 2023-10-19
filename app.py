@@ -1,7 +1,7 @@
 import os
 from fastapi import FastAPI , Request ,  Header
 from google.cloud import bigquery
-import requests
+# import requests
 
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'config.json'
 
