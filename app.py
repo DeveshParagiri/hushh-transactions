@@ -2,10 +2,9 @@ import os
 from fastapi import FastAPI , Request ,  Header
 from google.cloud import bigquery
 from google.oauth2.service_account import Credentials
-# import requests
 import base64
 import json 
-# os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'config.json'
+
 
 creds_base64 = os.environ.get("GOOGLE_CREDENTIALS_BASE64")
 creds_json_str = base64.b64decode(creds_base64).decode('utf-8')
@@ -297,51 +296,51 @@ async def get_budget_information(card_holder: str, request: Request , authentica
 # async def get_spend_statistics(card_holder: str):
 #     return{ Access detailed statistics on spending patterns, including trends and outliers.}
 
-@app.get("/travel_spends/{card_holder}")
-async def get_travel_spends(card_holder: str, request: Request , authentication : str = Header(None)):
-    """ Test Value for card holder : William Harris \n
-    Test Value for authorization token : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"""
-    if not authentication:
-            return {"status" : 0, "message": f"Authoriztion Token Missing"}
-    valid_auth = auth_check(authentication)
-    if valid_auth.get('status') != 1:
-        return valid_auth
-    sql_query = f"""
-    SELECT SUM(amount) AS total_travel_spend
-    FROM hushone-app.lvmh_demo.transactions
-    WHERE card_holder = "{card_holder}" AND merchant_category_code = "4722"
-    """
-    query_job = client.query(sql_query)
-    result = query_job.result()
-    total_travel_spend = 0.0
+# @app.get("/travel_spends/{card_holder}")
+# async def get_travel_spends(card_holder: str, request: Request , authentication : str = Header(None)):
+#     """ Test Value for card holder : William Harris \n
+#     Test Value for authorization token : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"""
+#     if not authentication:
+#             return {"status" : 0, "message": f"Authoriztion Token Missing"}
+#     valid_auth = auth_check(authentication)
+#     if valid_auth.get('status') != 1:
+#         return valid_auth
+#     sql_query = f"""
+#     SELECT SUM(amount) AS total_travel_spend
+#     FROM hushone-app.lvmh_demo.transactions
+#     WHERE card_holder = "{card_holder}" AND merchant_category_code = "4722"
+#     """
+#     query_job = client.query(sql_query)
+#     result = query_job.result()
+#     total_travel_spend = 0.0
 
-    for row in result:
-        total_travel_spend = row.total_travel_spend
+#     for row in result:
+#         total_travel_spend = row.total_travel_spend
 
-    return {"total_travel_spend": total_travel_spend}
+#     return {"total_travel_spend": total_travel_spend}
 
-@app.get("/travel_destinations/{card_holder}")
-async def get_travel_destinations(card_holder: str, request: Request , authentication : str = Header(None)):
-    """ Test Value for card holder : William Harris \n
-    Test Value for authorization token : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"""
-    if not authentication:
-            return {"status" : 0, "message": f"Authoriztion Token Missing"}
-    valid_auth = auth_check(authentication)
-    if valid_auth.get('status') != 1:
-        return valid_auth
-    sql_query = f"""
-    SELECT currency AS currency_code, SUM(amount) AS total_amount
-    FROM hushone-app.lvmh_demo.transactions
-    WHERE card_holder = "{card_holder}"
-    GROUP BY currency
-    """
-    query_job = client.query(sql_query)
-    results = [dict(row) for row in query_job]
+# @app.get("/travel_destinations/{card_holder}")
+# async def get_travel_destinations(card_holder: str, request: Request , authentication : str = Header(None)):
+#     """ Test Value for card holder : William Harris \n
+#     Test Value for authorization token : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"""
+#     if not authentication:
+#             return {"status" : 0, "message": f"Authoriztion Token Missing"}
+#     valid_auth = auth_check(authentication)
+#     if valid_auth.get('status') != 1:
+#         return valid_auth
+#     sql_query = f"""
+#     SELECT currency AS currency_code, SUM(amount) AS total_amount
+#     FROM hushone-app.lvmh_demo.transactions
+#     WHERE card_holder = "{card_holder}"
+#     GROUP BY currency
+#     """
+#     query_job = client.query(sql_query)
+#     results = [dict(row) for row in query_job]
 
-    if not results:
-        return {"message": f"No currency spending information found for the specified card holder '{card_holder}'."}
+#     if not results:
+#         return {"message": f"No currency spending information found for the specified card holder '{card_holder}'."}
 
-    return results
+#     return results
 
 
 
